@@ -14,7 +14,6 @@
             font-family: 'Noto Sans JP', sans-serif;
             background-color: #F0F4F8;
             -webkit-tap-highlight-color: transparent;
-            /* 防止 iOS 彈性捲動影響體驗 */
             overscroll-behavior-y: none;
         }
         .no-scrollbar::-webkit-scrollbar {
@@ -195,7 +194,7 @@
                             <div class="flex flex-col gap-2 text-sm text-gray-600">
                                 <div class="flex items-start gap-2">
                                     <i class="fa-solid fa-map-pin mt-1 text-red-400"></i>
-                                    <a :href="'http://googleusercontent.com/maps.google.com/3' + encodeURIComponent(hotel.address)" target="_blank" class="underline decoration-gray-300">{{ hotel.address }}</a>
+                                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(hotel.address)" target="_blank" class="underline decoration-gray-300">{{ hotel.address }}</a>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i class="fa-solid fa-user text-blue-400"></i>
@@ -509,8 +508,12 @@
                     return map[cat] || 'bg-slate-400';
                 };
 
+                // 修正後的 Google Maps 開啟邏輯
                 const openMap = (keyword) => {
-                    window.open(`http://googleusercontent.com/maps.google.com/4{encodeURIComponent(keyword)}`, '_blank');
+                    // 移除可能干擾搜尋的字詞 (如 "Check-in: ", "前往")
+                    const cleanKeyword = keyword.replace(/Check-in:\s*/i, '').replace(/^前往/, '').trim();
+                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanKeyword)}`;
+                    window.open(url, '_blank');
                 };
 
                 const openAddModal = () => {
@@ -578,15 +581,6 @@
                     if (targetIndex >= 0 && targetIndex < list.length) {
                         // Swap items
                         [list[index], list[targetIndex]] = [list[targetIndex], list[index]];
-                        
-                        // 注意：如果只是交換順序，時間可能不會變，這裡保留使用者手動編輯時間的彈性
-                        // 若希望交換後時間互換，可以把下面的程式碼取消註解
-                        /*
-                        const tempTime = list[index].time;
-                        list[index].time = list[targetIndex].time;
-                        list[targetIndex].time = tempTime;
-                        */
-
                         saveToStorage();
                     }
                 };
