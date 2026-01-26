@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 大阪冬季之旅 (點擊管理版)</title>
+    <title>2026 大阪京都親子究極之旅 (導遊升級版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,12 +40,14 @@
         .animate-bar {
             animation: loadBar 1s ease-out forwards;
         }
-        .custom-checkbox:checked + div {
-            background-color: #3B82F6;
-            border-color: #3B82F6;
-        }
-        .custom-checkbox:checked + div svg {
-            display: block;
+        .highlight-tag {
+            background-color: #FEF3C7;
+            color: #92400E;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-right: 4px;
         }
     </style>
 </head>
@@ -61,7 +63,7 @@
             
             <div class="absolute top-6 left-6 text-white drop-shadow-md">
                 <h1 class="text-2xl font-bold tracking-widest">OSAKA 2026</h1>
-                <p class="text-sm opacity-90">Winter Family Trip</p>
+                <p class="text-sm opacity-90">Ultimate Family Trip</p>
             </div>
 
             <div class="absolute bottom-4 right-6 flex gap-3 z-20">
@@ -83,15 +85,26 @@
         <main class="relative z-0 -mt-8 pt-10 pb-24 px-4 min-h-[calc(100vh-250px)]">
             
             <div v-if="currentTab === 'itinerary'" class="animate-fade-in">
-                <div class="flex overflow-x-auto no-scrollbar gap-3 mb-6 pb-2">
+                <div class="flex overflow-x-auto no-scrollbar gap-3 mb-4 pb-2">
                     <div v-for="(day, index) in tripDays" :key="index" @click="currentDayIndex = index" :class="['flex-shrink-0 flex flex-col items-center justify-center w-14 h-16 rounded-2xl transition-all cursor-pointer border active-scale', currentDayIndex === index ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200' : 'bg-white text-gray-400 border-transparent']">
                         <span class="text-xs font-bold uppercase">{{ day.weekday }}</span><span class="text-xl font-bold">{{ day.date }}</span>
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl p-4 text-white shadow-lg mb-6 flex items-center justify-between">
-                    <div><div class="text-sm opacity-90"><i class="fa-solid fa-location-arrow mr-1"></i> {{ tripDays[currentDayIndex].location }}</div><div class="text-3xl font-bold mt-1">{{ tripDays[currentDayIndex].weather.temp }}°C</div><div class="text-xs opacity-75">體感 {{ tripDays[currentDayIndex].weather.feels }}°C</div></div>
-                    <div class="text-center"><i :class="tripDays[currentDayIndex].weather.icon" class="text-4xl mb-1"></i><div class="text-xs">{{ tripDays[currentDayIndex].weather.desc }}</div></div>
+                <div class="bg-white rounded-2xl p-4 shadow-lg mb-6 border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+                        <div class="flex items-center gap-2">
+                            <i :class="[tripDays[currentDayIndex].weather.icon, 'text-blue-500 text-xl']"></i>
+                            <div>
+                                <span class="text-sm font-bold text-slate-700">{{ tripDays[currentDayIndex].location }}</span>
+                                <span class="text-xs text-gray-400 ml-2">{{ tripDays[currentDayIndex].weather.desc }} {{ tripDays[currentDayIndex].weather.temp }}°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <div class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded shrink-0">🎒 今日必帶</div>
+                        <div class="text-xs text-slate-600 leading-relaxed font-medium">{{ tripDays[currentDayIndex].mustBring }}</div>
+                    </div>
                 </div>
 
                 <div class="space-y-4">
@@ -126,7 +139,14 @@
                             </div>
                             <div v-else class="flex gap-4 mb-2 mr-2">
                                 <div class="flex flex-col items-center min-w-[3rem]"><span class="text-sm font-bold text-slate-700">{{ item.time.split(' ')[0] }}</span><div :class="['w-8 h-8 rounded-full flex items-center justify-center text-white mt-1 text-xs', getCategoryColor(item.category)]"><i :class="getCategoryIcon(item.category)"></i></div></div>
-                                <div class="flex-1"><h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">{{ item.name }}</h3><div v-if="item.businessHours" class="text-xs text-gray-500 mb-1"><i class="fa-regular fa-clock mr-1"></i> {{ item.businessHours }}</div><div v-if="item.ticket" class="text-xs text-orange-500 mb-1 font-medium"><i class="fa-solid fa-ticket mr-1"></i> {{ item.ticket }}</div></div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">{{ item.name }}</h3>
+                                    <div v-if="item.tags" class="flex flex-wrap gap-1 mb-1">
+                                        <span v-for="tag in item.tags" class="highlight-tag">{{ tag }}</span>
+                                    </div>
+                                    <div v-if="item.businessHours" class="text-xs text-gray-500 mb-1"><i class="fa-regular fa-clock mr-1"></i> {{ item.businessHours }}</div>
+                                    <div v-if="item.ticket" class="text-xs text-orange-500 mb-1 font-medium"><i class="fa-solid fa-ticket mr-1"></i> {{ item.ticket }}</div>
+                                </div>
                             </div>
                             
                             <div class="flex border-t border-gray-100 mt-2 pt-2 gap-2">
@@ -147,7 +167,7 @@
                 <section><h3 class="font-bold text-slate-700 mb-3 ml-1">住宿資訊</h3><div class="space-y-3"><div v-for="hotel in hotelInfos" :key="hotel.name" class="bg-white rounded-2xl p-4 soft-shadow"><h4 class="font-bold text-blue-900">{{ hotel.name }}</h4><p class="text-xs text-gray-500 mt-1 mb-2">{{ hotel.engName }}</p><div class="flex flex-col gap-2 text-sm text-gray-600"><div class="flex items-start gap-2"><i class="fa-solid fa-map-pin mt-1 text-red-400"></i><a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(hotel.address)" target="_blank" class="underline decoration-gray-300">{{ hotel.address }}</a></div><div class="flex items-center gap-2"><i class="fa-solid fa-user text-blue-400"></i><span>{{ hotel.booker }} ({{ hotel.platform }})</span></div></div></div></div></section>
             </div>
 
-            <div v-if="currentTab === 'shopping'" class="animate-fade-in pb-20"><div class="grid grid-cols-2 gap-4"><div v-for="(item, idx) in shoppingList" :key="idx" @click="editShoppingItem(item, idx)" class="bg-white rounded-2xl p-3 soft-shadow flex flex-col relative group active:scale-95 transition-transform cursor-pointer"><div class="aspect-square bg-gray-100 rounded-xl mb-2 overflow-hidden flex items-center justify-center relative"><img v-if="item.image" :src="item.image" class="w-full h-full object-cover"><i v-else class="fa-solid fa-image text-gray-300 text-2xl"></i><div class="absolute bottom-1 right-1 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></div></div><h4 class="font-bold text-sm text-slate-700 truncate">{{ item.name }}</h4></div><div @click="openShoppingModal" class="bg-white/50 border-2 border-dashed border-blue-200 rounded-2xl flex flex-col items-center justify-center aspect-square cursor-pointer text-blue-300 hover:bg-blue-50 active-scale"><i class="fa-solid fa-plus text-3xl mb-2"></i><span class="text-xs font-bold">新增物品</span></div></div></div>
+            <div v-if="currentTab === 'shopping'" class="animate-fade-in pb-20"><div class="grid grid-cols-2 gap-4"><div v-for="(item, idx) in shoppingList" :key="idx" @click="editShoppingItem(item, idx)" class="bg-white rounded-2xl p-3 soft-shadow flex flex-col relative group active:scale-95 transition-transform cursor-pointer"><div class="aspect-square bg-gray-100 rounded-xl mb-2 overflow-hidden flex items-center justify-center relative"><img v-if="item.image" :src="item.image" class="w-full h-full object-cover"><i v-else class="fa-solid fa-image text-gray-300 text-2xl"></i><div class="absolute bottom-1 right-1 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></div></div><h4 class="font-bold text-sm text-slate-700 truncate">{{ item.name }}</h4></div><div @click="openShoppingModal" class="bg-white/50 border-2 border-dashed border-blue-200 rounded-2xl flex flex-col items-center justify-center aspect-square cursor-pointer text-blue-300 hover:bg-blue-50 active-scale"><i class="fa-solid fa-plus text-3xl mb-2"></i><span class="text-xs font-bold">新增商品</span></div></div></div>
             <div v-if="currentTab === 'expenses'" class="animate-fade-in pb-20 relative"><div class="flex justify-end mb-4"><button @click="showStatsModal = true" class="bg-white text-blue-600 border border-blue-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm active-scale flex items-center gap-2"><i class="fa-solid fa-chart-pie text-blue-500"></i> 統計報表</button></div><div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl mb-6"><div class="text-sm opacity-60 mb-1">總花費 (JPY)</div><div class="text-4xl font-bold mb-4">¥ {{ totalExpenses.toLocaleString() }}</div><div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4"><div><div class="text-xs opacity-60">現金支付</div><div class="font-bold text-lg">¥ {{ cashTotal.toLocaleString() }}</div></div><div><div class="text-xs opacity-60">信用卡支付</div><div class="font-bold text-lg">¥ {{ cardTotal.toLocaleString() }}</div></div></div></div><div class="bg-white rounded-2xl soft-shadow overflow-hidden"><div v-for="(exp, idx) in expenses" :key="exp.id" @click="editExpense(exp)" class="p-4 border-b border-gray-50 flex justify-between items-center last:border-0 active:bg-gray-50 cursor-pointer"><div class="flex items-center gap-3"><div :class="['w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0', getExpenseColor(exp.category)]"><i :class="getExpenseIcon(exp.category)"></i></div><div><div class="font-bold text-slate-700">{{ exp.name }}</div><div class="text-xs text-gray-400">{{ exp.date }} · {{ exp.category }}</div></div></div><div class="text-right"><div class="font-bold text-slate-800">¥{{ exp.amount.toLocaleString() }}</div><div class="text-xs text-gray-400"><span v-if="exp.method === '現金'" class="text-green-500 font-bold">現金</span><span v-else class="text-blue-500 font-bold"><i class="fa-regular fa-credit-card mr-1"></i>{{ exp.customName || exp.method }}</span></div></div></div><div v-if="expenses.length === 0" class="p-8 text-center text-gray-400 text-sm">還沒有記帳紀錄，按右下角新增！</div></div><button @click="openExpenseModal" class="fixed bottom-24 right-6 w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl flex items-center justify-center text-2xl hover:scale-110 active:scale-95 transition-transform z-30"><i class="fa-solid fa-plus"></i></button></div>
         </main>
 
@@ -156,12 +176,8 @@
                 <h3 class="text-lg font-bold mb-1 text-slate-800">行程管理</h3>
                 <p class="text-sm text-gray-500 mb-6 truncate">{{ selectedActionItem.name }}</p>
                 <div class="space-y-3">
-                    <button @click="triggerEdit" class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition-colors">
-                        <i class="fa-solid fa-pen"></i> 修改行程
-                    </button>
-                    <button @click="triggerDelete" class="w-full bg-red-50 text-red-500 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors">
-                        <i class="fa-solid fa-trash-can"></i> 刪除行程
-                    </button>
+                    <button @click="triggerEdit" class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition-colors"><i class="fa-solid fa-pen"></i> 修改行程</button>
+                    <button @click="triggerDelete" class="w-full bg-red-50 text-red-500 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"><i class="fa-solid fa-trash-can"></i> 刪除行程</button>
                     <button @click="showActionModal = false" class="w-full text-gray-400 py-2 text-sm">取消</button>
                 </div>
             </div>
@@ -176,21 +192,9 @@
                         <div><label class="text-xs text-gray-500 ml-1">時間</label><input type="time" v-model="modalForm.startTime" class="w-full bg-gray-50 p-3 rounded-xl border border-gray-100"></div>
                     </div>
                     <div><label class="text-xs text-gray-500 ml-1">名稱</label><input v-model="modalForm.name" class="w-full bg-gray-50 p-3 rounded-xl border border-gray-100" placeholder="行程名稱"></div>
-                    
-                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-2">
-                        <label class="text-xs text-gray-500 font-bold"><i class="fa-solid fa-route mr-1"></i>交通方式 (自動規劃)</label>
-                        <select v-model="modalForm.transitType" class="w-full bg-white p-2 rounded-lg border border-gray-200 text-sm">
-                            <option value="train">大眾運輸 (JR/地鐵)</option>
-                            <option value="car">開車/計程車/巴士</option>
-                            <option value="walk">步行</option>
-                        </select>
-                        <div class="text-[10px] text-gray-400">儲存後，點擊列表上的「查看路線」即可開啟 Google Maps。</div>
-                    </div>
                     <div><label class="text-xs text-gray-500 ml-1">個人備註</label><textarea v-model="modalForm.note" class="w-full bg-gray-50 p-3 rounded-xl border border-gray-100" rows="3" placeholder="寫下你的筆記..."></textarea></div>
                 </div>
-                <div class="flex gap-3 mt-auto pt-2 shrink-0">
-                    <button @click="saveItem" class="w-full flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 active:bg-blue-700">儲存</button>
-                </div>
+                <div class="flex gap-3 mt-auto pt-2 shrink-0"><button @click="saveItem" class="w-full flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 active:bg-blue-700">儲存</button></div>
             </div>
         </div>
 
@@ -203,9 +207,10 @@
                     <div class="text-sm text-gray-500 mt-1">{{ selectedDetailItem.time }} · {{ selectedDetailItem.businessHours || '時間依現場為主' }}</div>
                 </div>
                 <div class="space-y-4">
-                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100"><h4 class="font-bold text-blue-800 mb-2 flex items-center"><i class="fa-solid fa-circle-info mr-2"></i> 景點介紹</h4><p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{{ selectedDetailItem.desc || '暫無介紹' }}</p></div>
-                    <div v-if="selectedDetailItem.mustEat" class="bg-orange-50 p-4 rounded-2xl border border-orange-100"><h4 class="font-bold text-orange-800 mb-2 flex items-center"><i class="fa-solid fa-utensils mr-2"></i> 必吃美食</h4><p class="text-sm text-slate-700">{{ selectedDetailItem.mustEat }}</p></div>
-                    <div v-if="selectedDetailItem.mustBuy" class="bg-purple-50 p-4 rounded-2xl border border-purple-100"><h4 class="font-bold text-purple-800 mb-2 flex items-center"><i class="fa-solid fa-bag-shopping mr-2"></i> 推薦購買</h4><p class="text-sm text-slate-700">{{ selectedDetailItem.mustBuy }}</p></div>
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100"><h4 class="font-bold text-blue-800 mb-2 flex items-center"><i class="fa-solid fa-circle-info mr-2"></i> 導遊介紹 (國小生版)</h4><p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{{ selectedDetailItem.desc || '暫無介紹' }}</p></div>
+                    <div v-if="selectedDetailItem.mustEat" class="bg-orange-50 p-4 rounded-2xl border border-orange-100"><h4 class="font-bold text-orange-800 mb-2 flex items-center"><i class="fa-solid fa-utensils mr-2"></i> 必吃 / 必逛</h4><p class="text-sm text-slate-700">{{ selectedDetailItem.mustEat }}</p></div>
+                    <div v-if="selectedDetailItem.mustBuy" class="bg-purple-50 p-4 rounded-2xl border border-purple-100"><h4 class="font-bold text-purple-800 mb-2 flex items-center"><i class="fa-solid fa-bag-shopping mr-2"></i> 必買伴手禮 & 藥妝</h4><p class="text-sm text-slate-700">{{ selectedDetailItem.mustBuy }}</p></div>
+                    <div v-if="selectedDetailItem.photoTip" class="bg-pink-50 p-4 rounded-2xl border border-pink-100"><h4 class="font-bold text-pink-800 mb-2 flex items-center"><i class="fa-solid fa-camera mr-2"></i> 拍照技巧</h4><p class="text-sm text-slate-700">{{ selectedDetailItem.photoTip }}</p></div>
                     <div v-if="selectedDetailItem.note" class="bg-gray-50 p-4 rounded-2xl border border-gray-100"><h4 class="font-bold text-gray-700 mb-2">您的備註</h4><p class="text-sm text-gray-600">{{ selectedDetailItem.note }}</p></div>
                 </div>
                 <button @click="showDetailModal = false" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold mt-6 text-lg shadow-lg active:scale-95 transition-transform">關閉攻略</button>
@@ -230,8 +235,8 @@
                 const showShoppingModal = ref(false);
                 const showExpenseModal = ref(false);
                 const showStatsModal = ref(false);
-                const showActionModal = ref(false); // 新增：動作選單
-                const selectedActionItem = ref({}); // 新增：當前選中的行程
+                const showActionModal = ref(false);
+                const selectedActionItem = ref({});
                 const isEditing = ref(false);
                 const isEditingExpense = ref(false);
                 const isEditingShopping = ref(false); 
@@ -246,66 +251,129 @@
                 });
 
                 const defaultPackingList = [
-                    { name: '重要證件與錢包', items: [{ name: '護照 (檢查期限)', checked: false }, { name: '日幣現金', checked: false }, { name: '信用卡 (開啟海外提款)', checked: false }, { name: '機票電子檔/紙本', checked: false }, { name: '網卡/漫遊', checked: false }, { name: 'VJW 入境填寫', checked: false }] },
-                    { name: '衣物 (大阪冬季均溫 5°C)', items: [{ name: '羽絨/保暖外套', checked: false }, { name: '發熱衣 (Heattech)', checked: false }, { name: '圍巾/手套/毛帽', checked: false }, { name: '好走的鞋', checked: false }, { name: '換洗衣物/免洗褲', checked: false }, { name: '睡衣', checked: false }] },
-                    { name: '電子產品', items: [{ name: '手機', checked: false }, { name: '行動電源 (放隨身)', checked: false }, { name: '充電線/插頭 (日本兩孔扁插)', checked: false }, { name: '網卡針', checked: false }, { name: '相機/記憶卡', checked: false }] },
-                    { name: '盥洗與藥品', items: [{ name: '牙刷/牙膏', checked: false }, { name: '保養品 (冬季乾燥)', checked: false }, { name: '護唇膏/乳液', checked: false }, { name: '常備藥 (感冒/腸胃/止痛)', checked: false }, { name: 'OK繃', checked: false }] },
-                    { name: '雜物', items: [{ name: '雨傘 (折疊)', checked: false }, { name: '購物袋', checked: false }, { name: '暖暖包', checked: false }, { name: '口罩', checked: false }, { name: '筆 (填表用)', checked: false }] }
+                    { name: '重要證件與錢包', items: [{ name: '護照 (檢查期限)', checked: false }, { name: '日幣現金', checked: false }, { name: '信用卡 (開啟海外提款)', checked: false }, { name: 'VJW 截圖', checked: false }] },
+                    { name: '衣物與保暖', items: [{ name: '羽絨外套', checked: false }, { name: '發熱衣', checked: false }, { name: '毛帽/手套', checked: false }, { name: '好走的鞋', checked: false }] },
+                    { name: '3C 與藥品', items: [{ name: '手機/充電線', checked: false }, { name: '行動電源 (必備)', checked: false }, { name: '網卡針', checked: false }, { name: '常備藥/OK繃', checked: false }] }
                 ];
                 const packingList = ref(JSON.parse(JSON.stringify(defaultPackingList)));
                 const newPackingInputs = ref({}); 
 
                 const tripDays = ref([
-                    { date: '2/4', weekday: 'Wed', fullDate: '2026-02-04', location: '大阪/梅田', weather: { temp: 8, feels: 5, icon: 'fa-solid fa-cloud', desc: '多雲時陰' } },
-                    { date: '2/5', weekday: 'Thu', fullDate: '2026-02-05', location: '大阪/USJ', weather: { temp: 6, feels: 2, icon: 'fa-solid fa-sun', desc: '晴時多雲' } },
-                    { date: '2/6', weekday: 'Fri', fullDate: '2026-02-06', location: '有馬溫泉', weather: { temp: 4, feels: 0, icon: 'fa-regular fa-snowflake', desc: '可能下雪' } },
-                    { date: '2/7', weekday: 'Sat', fullDate: '2026-02-07', location: '京都', weather: { temp: 5, feels: 2, icon: 'fa-solid fa-cloud-sun', desc: '多雲' } },
-                    { date: '2/8', weekday: 'Sun', fullDate: '2026-02-08', location: '京都', weather: { temp: 7, feels: 4, icon: 'fa-solid fa-sun', desc: '晴朗' } },
-                    { date: '2/9', weekday: 'Mon', fullDate: '2026-02-09', location: '關西機場', weather: { temp: 9, feels: 6, icon: 'fa-solid fa-cloud', desc: '多雲' } },
+                    { date: '2/4', weekday: 'Wed', fullDate: '2026-02-04', location: '大阪/梅田', weather: { temp: 8, feels: 5, icon: 'fa-solid fa-cloud', desc: '多雲時陰' }, mustBring: '護照、VJW 截圖、大行李箱(空一半)、行動電源。' },
+                    { date: '2/5', weekday: 'Thu', fullDate: '2026-02-05', location: '大阪/USJ', weather: { temp: 6, feels: 2, icon: 'fa-solid fa-sun', desc: '晴時多雲' }, mustBring: 'USJ APP (先下載)、兩顆滿電的行動電源 (玩馬力歐會耗電)、暖暖包 (海邊風大)、帽子手套。' },
+                    { date: '2/6', weekday: 'Fri', fullDate: '2026-02-06', location: '有馬溫泉', weather: { temp: 4, feels: 0, icon: 'fa-regular fa-snowflake', desc: '可能下雪' }, mustBring: '輕便過夜包 (換洗衣物)、各種充電線。大行李記得早上寄出！' },
+                    { date: '2/7', weekday: 'Sat', fullDate: '2026-02-07', location: '京都', weather: { temp: 5, feels: 2, icon: 'fa-solid fa-cloud-sun', desc: '多雲' }, mustBring: '空的胃 (吃錦市場)、好走的鞋。' },
+                    { date: '2/8', weekday: 'Sun', fullDate: '2026-02-08', location: '京都', weather: { temp: 7, feels: 4, icon: 'fa-solid fa-sun', desc: '晴朗' }, mustBring: '防滑的鞋 (猴子公園是泥土路)、零錢 (買飼料餵猴子)。' },
+                    { date: '2/9', weekday: 'Mon', fullDate: '2026-02-09', location: '關西機場', weather: { temp: 9, feels: 6, icon: 'fa-solid fa-cloud', desc: '多雲' }, mustBring: '護照 (放在好拿的地方)、剩餘的日幣零錢 (轉扭蛋)。' },
                 ]);
 
                 const itineraryData = ref({
                     0: [ 
-                        { id: 1, type: 'flight', category: 'flight', name: '華航 CI152', time: '09:45', flightInfo: { depCode: 'TPE', arrCode: 'KIX', number: 'CI152' }, note: 'T2 登機，13:20 抵達', desc: '快樂出發！記得先在飛機上填寫 VJW 入境審查，可以節省很多排隊時間。', transit: null },
-                        { id: 2, type: 'normal', category: 'traffic', name: '前往臨空城 Outlet', time: '13:30', note: 'JR 關空快速', desc: '只要一站就到 (Rinku Town 站)，非常近。車站內有大型置物櫃可以放行李，不用拖著走。', transit: { type: 'train', duration: '10分' } },
-                        { id: 3, type: 'normal', category: 'shop', name: 'Rinku Premium Outlets', time: '14:00', businessHours: '10:00-20:00', note: '大買特買', desc: '關西機場旁最大的 Outlet，海景很美。記得先去 Information Center 憑護照領取優惠券本 (Coupon Book)。', mustEat: 'Kuala Aina 夏威夷漢堡 (海景位)、Bagel & Bagel', mustBuy: 'Skechers 走路鞋 (日本款較便宜)、Nike、Adidas、Beams', transit: { type: 'walk', duration: '5分' } },
-                        { id: 4, type: 'normal', category: 'traffic', name: '前往大阪梅田', time: '17:00', note: 'JR 臨空城 -> 大阪站', desc: '下班時間人潮較多，建議搭乘「關空快速」直達大阪站，不用轉車，但要注意前四節車廂才是往大阪方向。', transit: { type: 'train', duration: '50分' } },
-                        { id: 5, type: 'normal', category: 'hotel', name: 'Check-in: Vischio Osaka', time: '18:30', note: '已付款', desc: '地點超好，就在 Grand Front Osaka 後面。飯店有提供免費的咖啡機，房間新穎乾淨。', mustEat: '飯店自助早餐評價很高，有現煎牛排。', transit: { type: 'walk', duration: '10分' } },
-                        { id: 6, type: 'normal', category: 'food', name: '一蘭拉麵 梅田店', time: '19:00', businessHours: '24H', note: '晚餐', desc: '經典豚骨拉麵，這家店通常要排隊。可以用點餐機先買餐券。', mustEat: '推薦組合：湯頭濃郁、麵條硬、加點半熟蛋與木耳。', transit: { type: 'walk', duration: '5分' } }
+                        { id: 1, type: 'flight', category: 'flight', name: '華航 CI152', time: '13:20', flightInfo: { depCode: 'TPE', arrCode: 'KIX', number: 'CI152' }, note: '機上先填 VJW', desc: '小朋友請在飛機上睡飽，下機後要走很多路！記得把 VJW 的 QR Code 截圖存在爸媽手機裡。', transit: null },
+                        { id: 2, type: 'normal', category: 'traffic', name: '前往臨空城 Outlet', time: '14:50', note: 'JR 關空快速', desc: '只要坐一站火車就到了！行李可以寄放在車站，或是Outlet裡面的置物櫃。', transit: { type: 'train', duration: '9分' } },
+                        { id: 3, type: 'normal', category: 'shop', name: 'Rinku Premium Outlets', time: '15:10', businessHours: '10:00-20:00', tags: ['便宜藥妝', '夕陽'], note: '領外國人 Coupon', 
+                          desc: '【國小生看點】這裡有很大的 Lego 樂高店和 Sanrio 三麗鷗(Hello Kitty)。\n【便宜藥妝】Daikoku (大國藥妝) 在 Seacle 商場 1 樓，比市區便宜！', 
+                          mustEat: 'Kua Aina 夏威夷漢堡 (薯條很細很好吃)、Snow Peak Eat (可以在帳篷裡吃飯)。', 
+                          mustBuy: 'Skechers (爸媽走路神鞋)、Nike、Adidas。', 
+                          photoTip: '下午 5:20 去「Sea Side Area」海邊，可以拍到摩天輪＋夕陽＋大海的無敵合照。',
+                          transit: { type: 'walk', duration: '5分' } },
+                        { id: 4, type: 'normal', category: 'traffic', name: '前往大阪梅田', time: '18:30', note: '前 4 節車廂', desc: '注意！火車會「分身」，一定要坐在第 1 到第 4 節車廂，不然會被載去別的地方喔。', transit: { type: 'train', duration: '55分' } },
+                        { id: 5, type: 'normal', category: 'hotel', name: 'Check-in: Vischio Osaka', time: '19:30', note: '梅田迷宮攻略', desc: '【梅田大迷宮】不要走地下街！出來後找「2樓天橋」，從 Grand Front 穿過去就到了。', transit: { type: 'walk', duration: '10分' } },
+                        { id: 6, type: 'normal', category: 'food', name: '藏壽司 梅田旗艦店', time: '20:00', tags: ['親子友善'], note: '可預約', 
+                          desc: '【國小生看點】這家是全世界最大的藏壽司！有祭典遊戲可以玩，盤子丟進去可以抽扭蛋。', 
+                          mustEat: '炙燒鮭魚、茶碗蒸 (日本的特別好吃)。', 
+                          photoTip: '入口有一面巨大的「彩色燈籠牆」，一定要在這裡拍全家福。',
+                          transit: { type: 'walk', duration: '5分' } }
                     ],
                     1: [
-                        { id: 10, type: 'normal', category: 'traffic', name: '出發前往 USJ', time: '07:00', note: 'JR 大阪 -> 環球城', desc: '建議早點出發，7:30 前抵達排隊。搭乘 JR 大阪環狀線轉夢咲線。', transit: { type: 'hotel', duration: '20分' } },
-                        { id: 11, type: 'normal', category: 'sight', name: '環球影城入園', time: '07:30', ticket: '快速通關已買', note: '排隊入園', desc: '一進門先打開 App 抽「任天堂世界」的整理券 (如果沒有買快通的話)。包包檢查需要一點時間。', mustBuy: '能量手環 (Power-Up Band) - 進任天堂園區玩小遊戲必備。', transit: { type: 'walk', duration: '5分' } },
-                        { id: 12, type: 'normal', category: 'sight', name: '小小兵瘋狂乘車遊', time: '08:30', note: '含商店逛街', desc: '非常可愛的園區，設施不會太恐怖，適合全家同樂。出口的商店非常好買。', mustBuy: '小小兵爆米花桶 (每季都有特殊造型，必收藏)。', transit: { type: 'walk', duration: '10分' } },
-                        { id: 13, type: 'normal', category: 'food', name: '小小兵餐廳午餐', time: '11:30', note: '', desc: '快樂咖啡廳，餐點造型都很逗趣。人多建議先用 App 預點餐或避開尖峰。', mustEat: '小小兵漢堡餐、蛋包飯。', transit: { type: 'walk', duration: '5分' } },
-                        { id: 14, type: 'normal', category: 'sight', name: 'NO LIMIT! Parade', time: '14:00', note: '遊行', desc: '大家一起跳舞的熱鬧遊行，會有寶可夢、瑪利歐花車！可以提前 20 分鐘找路邊佔位。', transit: { type: 'walk', duration: '0分' } },
-                        { id: 15, type: 'normal', category: 'sight', name: '馬力歐賽車 (快通)', time: '16:10', note: '指定時間', desc: '戴上 AR 眼鏡體驗真實瑪利歐賽車，要用龜殼丟敵人！能量手環可以紀錄分數。', mustEat: '奇諾比奧餐廳 (需一早抽號碼牌才吃得到)。', mustBuy: '無敵星星爆米花桶 (會發光)。', transit: { type: 'walk', duration: '15分' } },
-                        { id: 16, type: 'normal', category: 'sight', name: '哈利波特禁忌之旅', time: '18:00', note: '快速通關', desc: '必玩項目！晚上的霍格華茲城堡點燈非常美。設施稍微暈，容易暈車建議吃藥。', mustEat: '奶油啤酒 (Butterbeer) - 其實是無酒精的氣泡飲。', mustBuy: '互動魔杖 - 可以在園區內特定點施展魔法。', transit: { type: 'walk', duration: '10分' } }
+                        { id: 10, type: 'normal', category: 'traffic', name: '出發前往 USJ', time: '07:00', note: 'JR 環狀線->夢咲線', desc: '跟著人群走就對了！大家都要去環球影城。', transit: { type: 'hotel', duration: '30分' } },
+                        { id: 11, type: 'normal', category: 'sight', name: 'USJ 入園 & 抽整理券', time: '07:45', ticket: 'QR Code', note: '立刻抽瑪利歐', 
+                          desc: '【國小生看點】真實的電玩世界！一進門爸爸媽媽要趕快用手機抽「瑪利歐樂園」的號碼牌。', 
+                          mustBuy: '能量手環 (可以敲金磚賺金幣)、星星爆米花桶 (會發光)。', 
+                          photoTip: '一進門的大地球🌍是必拍，請路人幫忙拍合照，稍微由下往上拍腿會比較長。',
+                          transit: { type: 'walk', duration: '5分' } },
+                        { id: 12, type: 'normal', category: 'sight', name: '小小兵 & 親子區', time: '08:30', note: '身高限制注意', 
+                          desc: '【國小生看點】小小兵會出來惡作劇！「小小兵乘車遊」如果身高不夠 (102cm)，可以去旁邊的「環球奇境」開史努比飛機。', 
+                          mustEat: '小小兵夾心餅乾 (Minion Cookie Sand)。', 
+                          transit: { type: 'walk', duration: '10分' } },
+                        { id: 13, type: 'normal', category: 'food', name: '快樂咖啡廳午餐', time: '11:00', note: 'Happiness Cafe', 
+                          desc: '這裡有飲料喝到飽！休息一下，上個廁所，準備下午再戰。', 
+                          mustEat: '小小兵漢堡餐 (造型很可愛)。', 
+                          transit: { type: 'walk', duration: '5分' } },
+                        { id: 14, type: 'normal', category: 'sight', name: 'NO LIMIT! Parade', time: '14:00', note: '遊行', desc: '會有皮卡丘、瑪利歐出來跳舞！大家要一起跟著音樂揮手喔。', transit: { type: 'walk', duration: '0分' } },
+                        { id: 15, type: 'normal', category: 'sight', name: '超級任天堂世界', time: '15:30', note: '需憑券入場', 
+                          desc: '【國小生看點】真的進到馬力歐遊戲裡了！可以用手環去敲磚塊、打魔王。注意：一定要量身高，差1公分也不能玩賽車喔。', 
+                          mustEat: '奇諾比奧餐廳 (蘑菇濃湯)。', 
+                          photoTip: '在綠色水管裡面拍照，像剛從水管鑽出來一樣。',
+                          transit: { type: 'walk', duration: '15分' } },
+                        { id: 16, type: 'normal', category: 'sight', name: '哈利波特禁忌之旅', time: '18:00', note: '身高122cm', 
+                          desc: '【國小生看點】有真的貓頭鷹！晚上的霍格華茲城堡會發光，超級漂亮。', 
+                          mustEat: '奶油啤酒 (這是沒有酒精的汽水，小朋友可以喝，嘴巴會有白鬍子)。', 
+                          photoTip: '去「三根掃帚」餐廳後面的戶外座位，可以拍到最完整的城堡倒影，還沒有人擠人。',
+                          transit: { type: 'walk', duration: '10分' } },
+                        { id: 17, type: 'normal', category: 'food', name: '551 蓬萊肉包', time: '20:30', note: '宵夜', desc: '在車站外面買大阪最有名的肉包回飯店吃。', transit: { type: 'train', duration: '30分' } }
                     ],
                     2: [
-                        { id: 20, type: 'normal', category: 'sight', name: '大阪城天守閣', time: '09:00', note: '公園散步', desc: '大阪的象徵，登上天守閣可以俯瞰大阪市景。公園內有遊園小火車可以搭乘。', mustEat: '公園內的章魚燒攤販、抹茶冰淇淋。', mustBuy: '大阪城限定磁鐵、武將周邊。', transit: { type: 'train', duration: '30分' } },
-                        { id: 21, type: 'normal', category: 'traffic', name: '前往有馬溫泉', time: '13:30', note: '阪急高速巴士', desc: '從大阪梅田搭乘阪急巴士是最輕鬆的方式，不用拖行李轉車，直達溫泉區。', transit: { type: 'car', duration: '60分' } },
-                        { id: 22, type: 'normal', category: 'hotel', name: '有馬兵衛向陽閣', time: '15:00', note: '現場付款，泡湯', desc: '日本三大古湯之一，也是 700 年老字號旅館。有著名的「金之湯」(含鐵，紅色，舒緩肌肉) 與「銀之湯」(無色，美肌)。', mustEat: '溫泉懷石料理、神戶牛。', mustBuy: '有馬溫泉碳酸入浴劑。', transit: { type: 'walk', duration: '5分' } }
+                        { id: 20, type: 'normal', category: 'other', name: '【重要】行李託運', time: '08:30', note: '寄往京都飯店', desc: '爸爸媽媽注意：把大行李箱寄去京都，我們只帶一個小包包去溫泉旅館，像去露營一樣輕鬆！', transit: { type: 'hotel', duration: '10分' } },
+                        { id: 21, type: 'normal', category: 'sight', name: '大阪城公園', time: '09:30', note: '搭小火車', 
+                          desc: '【國小生看點】這是古代將軍住的地方，石頭牆壁超級大！我們可以坐公園裡的小火車去看城堡。', 
+                          mustEat: '章魚燒 (公園店)。', 
+                          photoTip: '不要站在城堡正下方拍，人會變很小。站在護城河的橋上拍，人跟城堡都很清楚。',
+                          transit: { type: 'train', duration: '20分' } },
+                        { id: 22, type: 'normal', category: 'traffic', name: '前往有馬溫泉', time: '13:30', note: '阪急高速巴士', desc: '坐舒服的大巴士去山上泡溫泉囉！', transit: { type: 'car', duration: '60分' } },
+                        { id: 23, type: 'normal', category: 'hotel', name: 'Check-in: 有馬兵衛向陽閣', time: '15:00', note: '金銀雙湯', 
+                          desc: '【國小生看點】這裡的溫泉有兩種顏色！一種是紅色的「金湯」，一種是透明的「銀湯」。', 
+                          mustEat: '晚餐吃超級高級的懷石料理 (有牛肉)。', 
+                          mustBuy: '碳酸入浴劑 (可以買回家泡澡)。',
+                          photoTip: '穿著飯店的浴衣在房間窗邊拍照，很有日本卡通的感覺。',
+                          transit: { type: 'walk', duration: '5分' } }
                     ],
                     3: [
-                        { id: 30, type: 'normal', category: 'sight', name: '有馬溫泉街散策', time: '09:00', note: '溫泉蛋、碳酸煎餅', desc: '復古的溫泉老街，很適合早上散步。', mustEat: '現烤碳酸煎餅 (賞味期限5秒!)、溫泉饅頭。', mustBuy: '三津森本舖碳酸煎餅禮盒。', transit: { type: 'hotel', duration: '0分' } },
-                        { id: 31, type: 'normal', category: 'traffic', name: '前往京都', time: '13:00', note: '阪急巴士 -> 京都八條口', desc: '直達京都車站，方便快捷。', transit: { type: 'car', duration: '90分' } },
-                        { id: 32, type: 'normal', category: 'hotel', name: 'Daiwa Roynet 京都八條', time: '15:00', note: '已付款', desc: '就在京都車站八條口對面，交通無敵，旁邊就有超商跟 Donki。', transit: { type: 'walk', duration: '5分' } },
-                        { id: 33, type: 'normal', category: 'shop', name: '錦市場', time: '16:00', note: '逛街+晚餐', desc: '被稱為「京都的廚房」，有各種漬物和海鮮。注意：現在錦市場禁止邊走邊吃，要站在店家規定的區域吃完。', mustEat: '豆乳甜甜圈、三木雞卵玉子燒、鮮蝦串、史努比茶屋。', mustBuy: '七味粉、京都漬物。', transit: { type: 'train', duration: '15分' } }
+                        { id: 30, type: 'normal', category: 'sight', name: '有馬溫泉街散策', time: '09:30', note: '賞味期限5秒', 
+                          desc: '【必吃挑戰】去「三津森本鋪」買碳酸煎餅，老闆剛拿給你時是軟的，數 5 秒就會變硬脆！小朋友要趕快吃掉！', 
+                          mustEat: '現烤碳酸煎餅、溫泉饅頭。', 
+                          transit: { type: 'hotel', duration: '0分' } },
+                        { id: 31, type: 'normal', category: 'traffic', name: '直達京都車站', time: '13:00', note: '阪急巴士', desc: '搭巴士直接去京都，車上可以睡午覺。', transit: { type: 'car', duration: '60分' } },
+                        { id: 32, type: 'normal', category: 'hotel', name: 'Check-in: Daiwa Roynet', time: '15:00', tags: ['便宜藥妝'], note: '確認行李', 
+                          desc: '我們的行李已經在飯店等我們了！\n【便宜藥妝】飯店對面有一間很大的「Don Quijote (唐吉訶德)」，晚上可以去探險。', 
+                          transit: { type: 'walk', duration: '5分' } },
+                        { id: 33, type: 'normal', category: 'shop', name: '錦市場', time: '16:00', note: '17:00 收攤', 
+                          desc: '【國小生看點】這是京都的廚房！有很多奇怪的食物，像紅色的小章魚(頭裡面有蛋)。注意：買了要在店門口吃完，不能邊走邊吃喔。', 
+                          mustEat: '富美家鍋燒烏龍麵 (很多料)、史努比茶屋 (可愛饅頭)、豆乳甜甜圈。', 
+                          mustBuy: '舞妓咖哩仙貝 (辣辣的很好吃)。', 
+                          transit: { type: 'train', duration: '15分' } }
                     ],
                     4: [
-                        { id: 40, type: 'normal', category: 'sight', name: '草莓園採果', time: '09:00', note: '吃到飽', desc: '日本草莓 (如章姬、紅臉頰) 又大又甜，記得沾煉乳吃。2月是草莓最好吃的季節。', mustEat: '現採草莓吃到飽！', transit: { type: 'train', duration: '40分' } },
-                        { id: 41, type: 'normal', category: 'sight', name: '金閣寺', time: '13:00', note: '參觀', desc: '整座貼滿金箔的寺廟，倒映在鏡湖池中非常美。建議下午去，陽光照射下金光閃閃。', mustEat: '金閣寺限定的金箔冰淇淋。', mustBuy: '金閣寺御守 (學業、交通安全很有名)。', transit: { type: 'car', duration: '30分' } },
-                        { id: 42, type: 'normal', category: 'shop', name: '京都車站周邊', time: '15:00', note: '伊勢丹、Porta', desc: '最後採買伴手禮的好地方。伊勢丹地下街有很多京都限定甜點。', mustEat: '中村藤吉抹茶聖代 (伊勢丹店，通常要排隊)。', mustBuy: 'MALEBRANCHE 茶之菓 (抹茶餅乾)、生八橋。', transit: { type: 'train', duration: '30分' } }
+                        { id: 40, type: 'normal', category: 'sight', name: '嵐山猴子公園', time: '09:00', note: '需爬山20分', 
+                          desc: '【國小生看點】我們要爬山去找猴子！山頂有一個小屋子，我們躲在籠子裡，猴子在外面，可以拿蘋果餵牠們，超級好玩！', 
+                          mustEat: '山頂販賣部的蘋果切片(餵猴子用，不能自己吃XD)。', 
+                          photoTip: '跟猴子合照時「眼睛不要一直盯著猴子眼睛看」，牠們會以為你要吵架。看鏡頭就好！',
+                          transit: { type: 'train', duration: 'JR 15分' } },
+                        { id: 41, type: 'normal', category: 'sight', name: '嵐山竹林 & 嵐電體驗', time: '11:30', note: '午餐+散步', 
+                          desc: '去竹林看像武俠片一樣的地方。然後去坐只有一節車廂的紫色電車「嵐電」，它會在馬路上跑喔！', 
+                          mustEat: 'ARABICA 咖啡 (爸媽喝)、米飛兔麵包 (小朋友吃)。', 
+                          transit: { type: 'walk', duration: '漫步' } },
+                        { id: 42, type: 'normal', category: 'sight', name: '金閣寺', time: '15:00', businessHours: '09:00-17:00', note: '夕陽金閣', 
+                          desc: '【國小生看點】一休和尚卡通裡的黃金屋！整棟房子都是用真的金箔貼上去的，閃閃發亮。', 
+                          mustEat: '金箔冰淇淋 (嘴巴會金金的)。', 
+                          mustBuy: '金閣寺御守 (保佑考試100分)。', 
+                          photoTip: '一定要拍到「水里面的金閣寺倒影」，那才是最厲害的照片。',
+                          transit: { type: 'train', duration: '嵐電+巴 40分' } },
+                        { id: 43, type: 'normal', category: 'food', name: '拉麵小路晚餐', time: '17:30', note: '京都車站10F', 
+                          desc: '這裡有全日本最好吃的拉麵集合！吃飽後去走「空中走廊」，看晚上的京都塔。', 
+                          transit: { type: 'car', duration: '巴士 40分' } }
                     ],
                     5: [
-                        { id: 50, type: 'normal', category: 'traffic', name: '前往關西機場', time: '08:30', note: 'JR 京都 -> KIX', desc: '搭乘 HARUKA 特急列車直達機場 (Hello Kitty 彩繪列車)。建議提早買好票。', transit: { type: 'train', duration: '90分' } },
-                        { id: 51, type: 'flight', category: 'flight', name: '星宇 JX823', time: '14:00', flightInfo: { depCode: 'KIX', arrCode: 'TPE', number: 'JX823' }, note: 'T1 登機', desc: '機場免稅店很好買，記得留時間逛。Check-in 後可以去吃神座拉麵。', mustBuy: 'ROYCE 生巧克力、東京香蕉 (關西也買得到)、薯條三兄弟、LeTAO 起司蛋糕。', transit: { type: 'walk', duration: '10分' } }
+                        { id: 50, type: 'normal', category: 'traffic', name: '前往關西機場', time: '09:30', note: 'JR HARUKA', desc: '搭 Hello Kitty 的火車去機場囉！', transit: { type: 'train', duration: '80分' } },
+                        { id: 51, type: 'flight', category: 'flight', name: '星宇 JX823', time: '14:00', flightInfo: { depCode: 'KIX', arrCode: 'TPE', number: 'JX823' }, tags: ['2026必買'], note: 'T1 登機', 
+                          desc: '【最後衝刺】把剩下的零錢全部拿去轉扭蛋！\n【2026 必買伴手禮】\n1. Grand Calbee (高級厚洋芋片)\n2. Bâton d\'or (貴婦 Pocky)\n3. 薯條三兄弟 (萬年不敗)\n4. ROYCE 生巧克力 (要買保冰袋)', 
+                          mustBuy: '扭蛋機 (把零錢花光)。', 
+                          transit: { type: 'walk', duration: '10分' } }
                     ]
                 });
 
                 const flightInfos = [
-                    { type: '去程', date: '2026/2/4', dep: 'TPE', arr: 'KIX', depTime: '09:45', arrTime: '13:20', duration: '2h35m', code: 'CI152', terminal: '桃機 T2 / 關西 T1' },
+                    { type: '去程', date: '2026/2/4', dep: 'TPE', arr: 'KIX', depTime: '13:20', arrTime: '16:50', duration: '2h35m', code: 'CI152', terminal: '桃機 T2 / 關西 T1' },
                     { type: '回程', date: '2026/2/9', dep: 'KIX', arr: 'TPE', depTime: '14:00', arrTime: '16:15', duration: '3h15m', code: 'JX823', terminal: '關西 T1 / 桃機 T1' }
                 ];
                 
@@ -356,7 +424,7 @@
 
                 // 導航與路線規劃邏輯
                 const cleanName = (name) => {
-                    return name.replace(/Check-in:\s*/i, '').replace(/^前往/, '').replace(/（.*?）/g, '').trim();
+                    return name.replace(/Check-in:\s*/i, '').replace(/^前往/, '').replace(/【.*?】/g, '').replace(/（.*?）/g, '').trim();
                 };
 
                 const openMap = (keyword) => {
@@ -401,19 +469,16 @@
                 const openAddModal = () => { isEditing.value = false; modalForm.value = { category: 'sight', transitType: 'walk', startTime: '10:00' }; showModal.value = true; };
                 const closeModal = () => { showModal.value = false; };
                 
-                // 點擊卡片開啟動作選單 (New)
                 const openActionModal = (item) => {
                     selectedActionItem.value = item;
                     showActionModal.value = true;
                 };
 
-                // 由選單觸發編輯
                 const triggerEdit = () => {
                     showActionModal.value = false;
                     editItem(selectedActionItem.value);
                 };
 
-                // 由選單觸發刪除
                 const triggerDelete = () => {
                     showActionModal.value = false;
                     confirmDeleteItem(selectedActionItem.value);
@@ -439,11 +504,13 @@
                         time: modalForm.value.startTime, 
                         businessHours: modalForm.value.businessHours, 
                         ticket: modalForm.value.ticket, 
+                        tags: dayList.find(i => i.id === modalForm.value.id)?.tags || [], // 保留 tags
                         note: modalForm.value.note, 
                         // 導遊資訊：若編輯中沒有，則嘗試從預設資料找回
                         desc: dayList.find(i => i.id === modalForm.value.id)?.desc || '',
                         mustEat: dayList.find(i => i.id === modalForm.value.id)?.mustEat || '',
                         mustBuy: dayList.find(i => i.id === modalForm.value.id)?.mustBuy || '',
+                        photoTip: dayList.find(i => i.id === modalForm.value.id)?.photoTip || '',
                         
                         transit: isEditing.value && dayList.find(i => i.id === modalForm.value.id)?.transit ? 
                                  { ...dayList.find(i => i.id === modalForm.value.id).transit, type: modalForm.value.transitType } :
@@ -465,7 +532,6 @@
                 const deleteItem = () => { confirmDeleteItem(modalForm.value); showModal.value = false; };
                 const moveItem = (index, direction) => { const list = itineraryData.value[currentDayIndex.value]; const targetIndex = index + direction; if (targetIndex >= 0 && targetIndex < list.length) { [list[index], list[targetIndex]] = [list[targetIndex], list[index]]; saveToStorage(); } };
                 
-                // 購物清單邏輯
                 const openShoppingModal = () => { isEditingShopping.value = false; shoppingForm.value = { name: '', image: null }; showShoppingModal.value = true; };
                 const editShoppingItem = (item, idx) => { isEditingShopping.value = true; editingShoppingIndex.value = idx; shoppingForm.value = { ...item }; showShoppingModal.value = true; };
                 const handleImageUpload = (e) => { const file = e.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => shoppingForm.value.image = e.target.result; reader.readAsDataURL(file); } };
@@ -507,6 +573,8 @@
                                         savedItem.desc = defaultItem.desc;
                                         savedItem.mustEat = defaultItem.mustEat;
                                         savedItem.mustBuy = defaultItem.mustBuy;
+                                        savedItem.photoTip = defaultItem.photoTip;
+                                        savedItem.tags = defaultItem.tags;
                                     }
                                 }
                             });
@@ -523,7 +591,7 @@
                     currentTab, currentDayIndex, tripDays, currentDayItinerary, bannerImage, flightInfos, hotelInfos,
                     showModal, modalForm, openAddModal, closeModal, editItem, saveItem, deleteItem, moveItem, confirmDeleteItem,
                     openMap, openRoute, openDetail, showDetailModal, selectedDetailItem,
-                    openActionModal, showActionModal, selectedActionItem, triggerEdit, triggerDelete, // Action Modal 相關
+                    openActionModal, showActionModal, selectedActionItem, triggerEdit, triggerDelete, 
                     getCategoryIcon, getCategoryColor, getTransitIcon, exchangeRate, calcJpy, calculatedTwd,
                     shoppingList, showShoppingModal, openShoppingModal, shoppingForm, handleImageUpload, addShoppingItem, removeShoppingItem, editShoppingItem, deleteShoppingItem, isEditingShopping,
                     expenses, totalExpenses, cashTotal, cardTotal, cardBreakdown, categoryBreakdown, showExpenseModal, openExpenseModal, 
