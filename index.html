@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 大阪京都親子究極之旅 (導遊升級版)</title>
+    <title>2026 大阪京都冬季親子之旅 (最終語音導覽版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -49,6 +49,18 @@
             font-weight: bold;
             margin-right: 4px;
         }
+        .transit-badge {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #BFDBFE;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body class="text-slate-700">
@@ -63,7 +75,7 @@
             
             <div class="absolute top-6 left-6 text-white drop-shadow-md">
                 <h1 class="text-2xl font-bold tracking-widest">OSAKA 2026</h1>
-                <p class="text-sm opacity-90">Ultimate Family Trip</p>
+                <p class="text-sm opacity-90">Family Trip Guide</p>
             </div>
 
             <div class="absolute bottom-4 right-6 flex gap-3 z-20">
@@ -114,10 +126,10 @@
                              @click="openRoute(index)"
                              class="flex items-center justify-center py-2 text-xs text-blue-400 hover:text-blue-600 gap-2 cursor-pointer transition-colors active:scale-95">
                             <span class="h-6 w-[1px] bg-blue-200"></span>
-                            <div class="flex items-center gap-1 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 shadow-sm">
+                            <div class="transit-badge shadow-sm">
                                 <i :class="getTransitIcon(item.transit.type)"></i>
-                                <span class="font-bold">{{ item.transit.duration || '📍 查看路線' }}</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] ml-1 opacity-50"></i>
+                                <span class="font-bold">{{ item.transit.duration || '查看路線' }}</span>
+                                <i class="fa-solid fa-chevron-right text-[8px] opacity-50 ml-1"></i>
                             </div>
                             <span class="h-6 w-[1px] bg-blue-200"></span>
                         </div>
@@ -272,7 +284,7 @@
                         { id: 1, type: 'flight', category: 'flight', name: '華航 CI152', time: '13:20', flightInfo: { depCode: 'TPE', arrCode: 'KIX', number: 'CI152' }, note: '機上先填 VJW', desc: '小朋友請在飛機上睡飽，下機後要走很多路！記得把 VJW 的 QR Code 截圖存在爸媽手機裡。', transit: null },
                         { id: 2, type: 'normal', category: 'traffic', name: '前往臨空城 Outlet', time: '14:50', note: 'JR 關空快速', desc: '只要坐一站火車就到了！行李可以寄放在車站，或是Outlet裡面的置物櫃。', transit: { type: 'train', duration: '9分' } },
                         { id: 3, type: 'normal', category: 'shop', name: 'Rinku Premium Outlets', time: '15:10', businessHours: '10:00-20:00', tags: ['便宜藥妝', '夕陽'], note: '領外國人 Coupon', 
-                          desc: '【國小生看點】這裡有很大的 Lego 樂高店和 Sanrio 三麗鷗(Hello Kitty)。\n【便宜藥妝】Daikoku (大國藥妝) 在 Seacle 商場 1 樓，比市區便宜！', 
+                          desc: '「這裡是大阪最大的海邊 Outlet，後面就是大海，買東西還能看海！」\n「我們先去拿外國人優惠券，這樣買鞋子和衣服更便宜！」\n【便宜藥妝】Daikoku (大國藥妝) 在 Seacle 商場 1 樓。', 
                           mustEat: 'Kua Aina 夏威夷漢堡 (薯條很細很好吃)、Snow Peak Eat (可以在帳篷裡吃飯)。', 
                           mustBuy: 'Skechers (爸媽走路神鞋)、Nike、Adidas。', 
                           photoTip: '下午 5:20 去「Sea Side Area」海邊，可以拍到摩天輪＋夕陽＋大海的無敵合照。',
@@ -286,9 +298,9 @@
                           transit: { type: 'walk', duration: '5分' } }
                     ],
                     1: [
-                        { id: 10, type: 'normal', category: 'traffic', name: '出發前往 USJ', time: '07:00', note: 'JR 環狀線->夢咲線', desc: '跟著人群走就對了！大家都要去環球影城。', transit: { type: 'hotel', duration: '30分' } },
+                        { id: 10, type: 'normal', category: 'traffic', name: '出發前往 USJ', time: '07:00', note: 'JR 環狀線->夢咲線', desc: '跟著人群走就對了！大家都要去環球影城。', transit: { type: 'train', duration: '30分' } },
                         { id: 11, type: 'normal', category: 'sight', name: 'USJ 入園 & 抽整理券', time: '07:45', ticket: 'QR Code', note: '立刻抽瑪利歐', 
-                          desc: '【國小生看點】真實的電玩世界！一進門爸爸媽媽要趕快用手機抽「瑪利歐樂園」的號碼牌。', 
+                          desc: '「這裡是環球影城，裡面有小小兵、瑪利歐和哈利波特，超級好玩！」\n\n【重點】一進門爸爸媽媽要趕快用手機抽「瑪利歐樂園」的號碼牌。', 
                           mustBuy: '能量手環 (可以敲金磚賺金幣)、星星爆米花桶 (會發光)。', 
                           photoTip: '一進門的大地球🌍是必拍，請路人幫忙拍合照，稍微由下往上拍腿會比較長。',
                           transit: { type: 'walk', duration: '5分' } },
@@ -300,9 +312,9 @@
                           desc: '這裡有飲料喝到飽！休息一下，上個廁所，準備下午再戰。', 
                           mustEat: '小小兵漢堡餐 (造型很可愛)。', 
                           transit: { type: 'walk', duration: '5分' } },
-                        { id: 14, type: 'normal', category: 'sight', name: 'NO LIMIT! Parade', time: '14:00', note: '遊行', desc: '會有皮卡丘、瑪利歐出來跳舞！大家要一起跟著音樂揮手喔。', transit: { type: 'walk', duration: '0分' } },
+                        { id: 14, type: 'normal', category: 'sight', name: 'NO LIMIT! Parade', time: '14:00', note: '遊行', desc: '「遊行開始了！大家快看，瑪利歐和皮卡丘在跳舞！」', transit: { type: 'walk', duration: '0分' } },
                         { id: 15, type: 'normal', category: 'sight', name: '超級任天堂世界', time: '15:30', note: '需憑券入場', 
-                          desc: '【國小生看點】真的進到馬力歐遊戲裡了！可以用手環去敲磚塊、打魔王。注意：一定要量身高，差1公分也不能玩賽車喔。', 
+                          desc: '「這個手環可以收集金幣，像真的在打電動一樣！」\n\n【注意】一定要量身高，差1公分也不能玩賽車喔。', 
                           mustEat: '奇諾比奧餐廳 (蘑菇濃湯)。', 
                           photoTip: '在綠色水管裡面拍照，像剛從水管鑽出來一樣。',
                           transit: { type: 'walk', duration: '15分' } },
@@ -314,57 +326,57 @@
                         { id: 17, type: 'normal', category: 'food', name: '551 蓬萊肉包', time: '20:30', note: '宵夜', desc: '在車站外面買大阪最有名的肉包回飯店吃。', transit: { type: 'train', duration: '30分' } }
                     ],
                     2: [
-                        { id: 20, type: 'normal', category: 'other', name: '【重要】行李託運', time: '08:30', note: '寄往京都飯店', desc: '爸爸媽媽注意：把大行李箱寄去京都，我們只帶一個小包包去溫泉旅館，像去露營一樣輕鬆！', transit: { type: 'hotel', duration: '10分' } },
+                        { id: 20, type: 'normal', category: 'other', name: '【重要】行李託運', time: '08:30', note: '寄往京都飯店', desc: '爸爸媽媽注意：把大行李箱寄去京都，我們只帶一個小包包去溫泉旅館，像去露營一樣輕鬆！\n\n【填單重點 - 給櫃檯看】\n收件人: Daiwa Roynet Hotel Kyoto Terrace Hachijo (Front Desk)\n地址: 14-1 Higashikujo Higashisannocho, Minami Ward, Kyoto, 601-8004日本\n電話: +81 75-682-0855\n備註: Check-in 2/7, Guest: LAI YOU WEN, Res No: 1616327071949495\n🔴 配達日: 2026/02/06 or 2026/02/07', transit: { type: 'walk', duration: '5分' } },
                         { id: 21, type: 'normal', category: 'sight', name: '大阪城公園', time: '09:30', note: '搭小火車', 
-                          desc: '【國小生看點】這是古代將軍住的地方，石頭牆壁超級大！我們可以坐公園裡的小火車去看城堡。', 
+                          desc: '「這是大阪城，四百多年前豐臣秀吉蓋的，裡面有好多武士的故事！」\n「站在天守閣上可以看到整個大阪，好像小鳥在天空看城市！」', 
                           mustEat: '章魚燒 (公園店)。', 
                           photoTip: '不要站在城堡正下方拍，人會變很小。站在護城河的橋上拍，人跟城堡都很清楚。',
                           transit: { type: 'train', duration: '20分' } },
-                        { id: 22, type: 'normal', category: 'traffic', name: '前往有馬溫泉', time: '13:30', note: '阪急高速巴士', desc: '坐舒服的大巴士去山上泡溫泉囉！', transit: { type: 'car', duration: '60分' } },
+                        { id: 22, type: 'normal', category: 'traffic', name: '前往有馬溫泉', time: '13:30', note: '阪急高速巴士', desc: '【直達巴士】從梅田阪急三番街巴士總站出發，直達有馬溫泉，完全不用轉車！', transit: { type: 'car', duration: '60分' } },
                         { id: 23, type: 'normal', category: 'hotel', name: 'Check-in: 有馬兵衛向陽閣', time: '15:00', note: '金銀雙湯', 
-                          desc: '【國小生看點】這裡的溫泉有兩種顏色！一種是紅色的「金湯」，一種是透明的「銀湯」。', 
+                          desc: '「這裡是有馬溫泉，日本最古老的溫泉之一！」\n「金之湯的水是紅色的，銀之湯的水是透明的，兩種都很特別！」', 
                           mustEat: '晚餐吃超級高級的懷石料理 (有牛肉)。', 
                           mustBuy: '碳酸入浴劑 (可以買回家泡澡)。',
                           photoTip: '穿著飯店的浴衣在房間窗邊拍照，很有日本卡通的感覺。',
-                          transit: { type: 'walk', duration: '5分' } }
+                          transit: { type: 'walk', duration: '10分' } }
                     ],
                     3: [
                         { id: 30, type: 'normal', category: 'sight', name: '有馬溫泉街散策', time: '09:30', note: '賞味期限5秒', 
-                          desc: '【必吃挑戰】去「三津森本鋪」買碳酸煎餅，老闆剛拿給你時是軟的，數 5 秒就會變硬脆！小朋友要趕快吃掉！', 
+                          desc: '「這個煎餅要趁熱吃，五秒就不脆了！」\n\n【任務】去「三津森本鋪」挑戰老闆剛烤好的軟煎餅！', 
                           mustEat: '現烤碳酸煎餅、溫泉饅頭。', 
-                          transit: { type: 'hotel', duration: '0分' } },
-                        { id: 31, type: 'normal', category: 'traffic', name: '直達京都車站', time: '13:00', note: '阪急巴士', desc: '搭巴士直接去京都，車上可以睡午覺。', transit: { type: 'car', duration: '60分' } },
+                          transit: { type: 'walk', duration: '20分' } },
+                        { id: 31, type: 'normal', category: 'traffic', name: '直達京都車站', time: '13:00', note: '阪急/京阪巴士', desc: '【直達巴士】從有馬溫泉直達京都車站八條口，下車就是飯店，不用搬行李轉車！', transit: { type: 'car', duration: '75分' } },
                         { id: 32, type: 'normal', category: 'hotel', name: 'Check-in: Daiwa Roynet', time: '15:00', tags: ['便宜藥妝'], note: '確認行李', 
                           desc: '我們的行李已經在飯店等我們了！\n【便宜藥妝】飯店對面有一間很大的「Don Quijote (唐吉訶德)」，晚上可以去探險。', 
-                          transit: { type: 'walk', duration: '5分' } },
+                          transit: { type: 'walk', duration: '3分' } },
                         { id: 33, type: 'normal', category: 'shop', name: '錦市場', time: '16:00', note: '17:00 收攤', 
-                          desc: '【國小生看點】這是京都的廚房！有很多奇怪的食物，像紅色的小章魚(頭裡面有蛋)。注意：買了要在店門口吃完，不能邊走邊吃喔。', 
+                          desc: '「這裡是京都的廚房，什麼小吃都有！」\n「我最喜歡豆乳甜甜圈，外面脆脆的，裡面軟軟的！」\n\n【注意】買了要在店門口吃完，不能邊走邊吃喔。', 
                           mustEat: '富美家鍋燒烏龍麵 (很多料)、史努比茶屋 (可愛饅頭)、豆乳甜甜圈。', 
                           mustBuy: '舞妓咖哩仙貝 (辣辣的很好吃)。', 
-                          transit: { type: 'train', duration: '15分' } }
+                          transit: { type: 'car', duration: '20分' } }
                     ],
                     4: [
                         { id: 40, type: 'normal', category: 'sight', name: '嵐山猴子公園', time: '09:00', note: '需爬山20分', 
-                          desc: '【國小生看點】我們要爬山去找猴子！山頂有一個小屋子，我們躲在籠子裡，猴子在外面，可以拿蘋果餵牠們，超級好玩！', 
+                          desc: '「猴子在外面自由走，人要在籠子裡餵牠們，好特別！」\n「爬到山頂可以看到整個京都，超級美！」', 
                           mustEat: '山頂販賣部的蘋果切片(餵猴子用，不能自己吃XD)。', 
                           photoTip: '跟猴子合照時「眼睛不要一直盯著猴子眼睛看」，牠們會以為你要吵架。看鏡頭就好！',
-                          transit: { type: 'train', duration: 'JR 15分' } },
+                          transit: { type: 'train', duration: 'JR 16分' } },
                         { id: 41, type: 'normal', category: 'sight', name: '嵐山竹林 & 嵐電體驗', time: '11:30', note: '午餐+散步', 
-                          desc: '去竹林看像武俠片一樣的地方。然後去坐只有一節車廂的紫色電車「嵐電」，它會在馬路上跑喔！', 
+                          desc: '【竹林】「這裡是竹林小徑，走進來就像進入綠色的隧道！」「風吹過竹子會發出沙沙聲，好像在唱歌！」\n\n【嵐電】「這是嵐電，京都唯一的路面電車，會在馬路上等紅綠燈！」「電車是紫色的，好可愛！」', 
                           mustEat: 'ARABICA 咖啡 (爸媽喝)、米飛兔麵包 (小朋友吃)。', 
-                          transit: { type: 'walk', duration: '漫步' } },
+                          transit: { type: 'walk', duration: '15分' } },
                         { id: 42, type: 'normal', category: 'sight', name: '金閣寺', time: '15:00', businessHours: '09:00-17:00', note: '夕陽金閣', 
-                          desc: '【國小生看點】一休和尚卡通裡的黃金屋！整棟房子都是用真的金箔貼上去的，閃閃發亮。', 
+                          desc: '「這是金閣寺，整座寺廟都貼滿金箔，閃閃發亮！」\n「下午的陽光照在金閣寺上，像一顆金色的寶石！」\n「這裡有金箔冰淇淋，吃起來閃閃的，好酷！」', 
                           mustEat: '金箔冰淇淋 (嘴巴會金金的)。', 
                           mustBuy: '金閣寺御守 (保佑考試100分)。', 
                           photoTip: '一定要拍到「水里面的金閣寺倒影」，那才是最厲害的照片。',
-                          transit: { type: 'train', duration: '嵐電+巴 40分' } },
+                          transit: { type: 'train', duration: '嵐電+Bus 40分' } },
                         { id: 43, type: 'normal', category: 'food', name: '拉麵小路晚餐', time: '17:30', note: '京都車站10F', 
-                          desc: '這裡有全日本最好吃的拉麵集合！吃飽後去走「空中走廊」，看晚上的京都塔。', 
-                          transit: { type: 'car', duration: '巴士 40分' } }
+                          desc: '【市營巴士 205】從金閣寺道直達京都車站。這裡有全日本最好吃的拉麵集合！', 
+                          transit: { type: 'car', duration: '45分' } }
                     ],
                     5: [
-                        { id: 50, type: 'normal', category: 'traffic', name: '前往關西機場', time: '09:30', note: 'JR HARUKA', desc: '搭 Hello Kitty 的火車去機場囉！', transit: { type: 'train', duration: '80分' } },
+                        { id: 50, type: 'normal', category: 'traffic', name: '前往關西機場', time: '09:30', note: '利木津巴士', desc: '【直達巴士】從飯店對面的八條口搭乘「利木津巴士」，不用拖行李去擠火車，上車睡覺直達機場！', transit: { type: 'car', duration: '88分' } },
                         { id: 51, type: 'flight', category: 'flight', name: '星宇 JX823', time: '14:00', flightInfo: { depCode: 'KIX', arrCode: 'TPE', number: 'JX823' }, tags: ['2026必買'], note: 'T1 登機', 
                           desc: '【最後衝刺】把剩下的零錢全部拿去轉扭蛋！\n【2026 必買伴手禮】\n1. Grand Calbee (高級厚洋芋片)\n2. Bâton d\'or (貴婦 Pocky)\n3. 薯條三兄弟 (萬年不敗)\n4. ROYCE 生巧克力 (要買保冰袋)', 
                           mustBuy: '扭蛋機 (把零錢花光)。', 
@@ -418,7 +430,7 @@
 
                 const getCategoryIcon = (cat) => { const map = { sight: 'fa-camera', food: 'fa-utensils', shop: 'fa-bag-shopping', hotel: 'fa-bed', traffic: 'fa-train-subway', flight: 'fa-plane', other: 'fa-circle' }; return `fa-solid ${map[cat] || 'fa-circle'}`; };
                 const getCategoryColor = (cat) => { const map = { sight: 'bg-orange-400', food: 'bg-red-400', shop: 'bg-purple-400', hotel: 'bg-blue-400', traffic: 'bg-gray-400', flight: 'bg-sky-500', other: 'bg-slate-400' }; return map[cat] || 'bg-slate-400'; };
-                const getTransitIcon = (type) => { if(type === 'walk') return 'fa-solid fa-person-walking'; if(type === 'car') return 'fa-solid fa-car'; if(type === 'hotel') return 'fa-solid fa-bed'; return 'fa-solid fa-train-subway'; };
+                const getTransitIcon = (type) => { if(type === 'walk') return 'fa-solid fa-person-walking'; if(type === 'car') return 'fa-solid fa-bus'; if(type === 'hotel') return 'fa-solid fa-bed'; return 'fa-solid fa-train-subway'; };
                 const getExpenseIcon = (cat) => { const map = { '飲食': 'fa-utensils', '交通': 'fa-train', '購物': 'fa-bag-shopping', '門票': 'fa-ticket', '住宿': 'fa-bed', '其他': 'fa-circle' }; return `fa-solid ${map[cat] || 'fa-circle'}`; };
                 const getExpenseColor = (cat) => { const map = { '飲食': 'bg-red-400', '交通': 'bg-gray-400', '購物': 'bg-purple-400', '門票': 'bg-orange-400', '住宿': 'bg-blue-400', '其他': 'bg-slate-400' }; return map[cat] || 'bg-slate-400'; };
 
