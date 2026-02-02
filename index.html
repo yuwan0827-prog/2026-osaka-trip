@@ -436,27 +436,49 @@
                 
                 const confirmDeleteItem = (item) => { if(confirm(`確定要刪除「${item.name}」嗎？刪除後無法復原。`)) { const dayList = itineraryData.value[currentDayIndex.value]; const idx = dayList.findIndex(i => i.id === item.id); if(idx !== -1) dayList.splice(idx, 1); saveToStorage(); } };
                 
-                const saveItem = () => { 
+                                const saveItem = () => { 
                     const dayList = itineraryData.value[currentDayIndex.value]; 
+                    
                     const newItem = { 
                         id: isEditing.value ? modalForm.value.id : Date.now(), 
                         type: modalForm.value.category === 'flight' ? 'flight' : 'normal', 
                         category: modalForm.value.category, 
-                        name: modalForm.value.name, 
-                        time: modalForm.value.startTime, 
-                        businessHours: modalForm.value.businessHours, 
-                        ticket: modalForm.value.ticket, 
+                        
+                        // 👇 加上 || '' 防護罩，防止未填寫變成 undefined
+                        name: modalForm.value.name || '未命名行程', 
+                        time: modalForm.value.startTime || '00:00',
+                        
+                        // 👇 這就是隱形殺手！因為螢幕沒得填，一定要加 || '' 變成空字串
+                        businessHours: modalForm.value.businessHours || '', 
+                        ticket: modalForm.value.ticket || '', 
+                        note: modalForm.value.note || '', 
+                        
+                        // 其他欄位也加上防護
                         tags: dayList.find(i => i.id === modalForm.value.id)?.tags || [],
-                        note: modalForm.value.note, 
                         desc: dayList.find(i => i.id === modalForm.value.id)?.desc || '',
                         mustEat: dayList.find(i => i.id === modalForm.value.id)?.mustEat || '',
                         mustBuy: dayList.find(i => i.id === modalForm.value.id)?.mustBuy || '',
                         photoTip: dayList.find(i => i.id === modalForm.value.id)?.photoTip || '',
+                        
                         transit: isEditing.value && dayList.find(i => i.id === modalForm.value.id)?.transit ? 
                                  { ...dayList.find(i => i.id === modalForm.value.id).transit, type: modalForm.value.transitType } :
                                  (currentDayIndex.value === 0 && dayList.length === 0 ? null : { type: modalForm.value.transitType }), 
+                        
                         flightInfo: modalForm.value.category === 'flight' ? { depCode: 'XXX', arrCode: 'XXX', number: 'FLIGHT' } : null 
                     }; 
+                    
+                    if (isEditing.value) { 
+                        const idx = dayList.findIndex(i => i.id === newItem.id); 
+                        dayList[idx] = newItem; 
+                    } else { 
+                        dayList.push(newItem); 
+                    } 
+                    
+                    dayList.sort((a, b) => a.time.localeCompare(b.time)); 
+                    saveToStorage(); 
+                    showModal.value = false; 
+                };
+ 
                     
                     if (isEditing.value) { 
                         const idx = dayList.findIndex(i => i.id === newItem.id); 
@@ -544,4 +566,5 @@
         }).mount('#app');
     </script>
 </body>
+
 </html>
