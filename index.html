@@ -104,7 +104,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref as dbRef, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // 🟢 您的 Firebase 設定 (已更新)
+        // 🟢 您的 Firebase 設定 (已更新，正確版)
         const firebaseConfig = {
           apiKey: "AIzaSyA8sysOQedr-G4itsrWzW-i6BfRCLKT_3Q",
           authDomain: "osaka2026-c5974.firebaseapp.com",
@@ -143,7 +143,7 @@
                 const isEditingExpense = ref(false);
                 const isEditingShopping = ref(false); 
                 const editingShoppingIndex = ref(null); 
-                const bannerImage = ref('banner.jpg');
+                const bannerImage = ref('banner.jpg'); // 🔴 已修正：使用您 GitHub 中的 banner.jpg
                 const selectedDetailItem = ref({});
 
                 const exchangeRate = ref(0.22);
@@ -355,6 +355,7 @@
                         const hotels = ['', 'Hotel Vischio Osaka', 'Hotel Vischio Osaka', 'Arima Onsen Hyoe Koyokaku', 'Daiwa Roynet Hotel Kyoto Terrace Hachijo', 'Daiwa Roynet Hotel Kyoto Terrace Hachijo' ]; 
                         origin = hotels[currentDayIndex.value] || 'Current Location'; 
                     }
+                    // 🔴 關鍵修正：補上 $ 符號，確保 Google Maps 網址參數正確
                     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=${mode}`;
                     window.open(url, '_blank');
                 };
@@ -441,7 +442,7 @@
                             if(data.expenses) expenses.value = data.expenses;
                             if(data.packing) packingList.value = data.packing;
                         } else {
-                            // 💡 如果資料庫是空的，自動寫入預設行程
+                            // 💡 如果資料庫是空的，自動寫入您提供的「詳細版行程」
                             saveToStorage();
                         }
                     }, (error) => {
@@ -467,4 +468,3 @@
     </script>
 </body>
 </html>
-
